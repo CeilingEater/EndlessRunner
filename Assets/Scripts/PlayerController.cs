@@ -6,13 +6,15 @@ public class PlayerController : MonoBehaviour
 {
     //[SerializeField] private int health = 5;
     [SerializeField] private float moveSpeed = 5f;
-    [SerializeField] private float jumpSpeed = 3f;
+    [SerializeField] private float jumpSpeed = 30f;
     [SerializeField] [Range(0.001f, 1f)] private float rotationSmoothness = 0.5f;
 
     private Rigidbody _rigidbody;
     private Vector3 _move;
-    private float _ySpeed;
+    private float _gravity;
+    private float _yVelocity;
     public static int Health = 5;
+    private bool _jumpRequest;
 
     void Start()
     {
@@ -27,6 +29,12 @@ public class PlayerController : MonoBehaviour
             Input.GetAxis("Jump"),  //maybe back to zero
             Input.GetAxis("Horizontal")
         );
+        
+        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded()) //can only jump if player is on ground, stops flying
+        {
+            _jumpRequest = true;
+        }
+            
     }
 
     void FixedUpdate() //interact with rigidbody in fixedupdate
@@ -39,11 +47,12 @@ public class PlayerController : MonoBehaviour
         
         if (_move.magnitude < 0.01f)
         {
-            _rigidbody.linearVelocity = Vector3.zero;
+            _rigidbody.linearVelocity = new Vector3(0, _rigidbody.linearVelocity.y, 0); //grav
             return;
         }
         
         Vector3 velocity = _move.normalized * moveSpeed;
+        velocity.y = _rigidbody.linearVelocity.y; //no feather falling
         _rigidbody.linearVelocity = velocity;
         
         float rotationAngle = Mathf.Atan2(velocity.x, velocity.z);
@@ -54,5 +63,19 @@ public class PlayerController : MonoBehaviour
         _rigidbody.MoveRotation(newrotation);
         _rigidbody.angularVelocity = Vector3.zero;
             
+        
+        //jump//
+        
+        if (_jumpRequest)
+        {
+            _rigidbody.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
+            _jumpRequest = false;
+        }
+        
+    }
+    
+    bool IsGrounded() 
+    {
+        return Physics.Raycast(transform.position, Vector3.down, 1.1f); //raycast sees if player is on ground
     }
 }
