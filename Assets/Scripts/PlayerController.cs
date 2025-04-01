@@ -9,12 +9,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float jumpSpeed = 30f;
     [SerializeField] [Range(0.001f, 1f)] private float rotationSmoothness = 0.5f;
 
-    private Rigidbody _rigidbody;
+    private Rigidbody _rigidbody; 
     private Vector3 _move;
     private float _gravity;
     private float _yVelocity;
     public static int Health = 5;
     private bool _jumpRequest;
+    private float _leftBounds;
+    private float _rightBounds;
 
     void Start()
     {
@@ -39,12 +41,6 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate() //interact with rigidbody in fixedupdate
     {
-        /*//ySpeed += Physics.gravity.y * Time.fixedDeltaTime;
-        if (Input.GetKey(KeyCode.Space))
-        {
-            _ySpeed = jumpSpeed;
-        }*/
-        
         if (_move.magnitude < 0.01f)
         {
             _rigidbody.linearVelocity = new Vector3(0, _rigidbody.linearVelocity.y, 0); //grav
@@ -77,5 +73,10 @@ public class PlayerController : MonoBehaviour
     bool IsGrounded() 
     {
         return Physics.Raycast(transform.position, Vector3.down, 1.1f); //raycast sees if player is on ground
+    }
+
+    private void CheckBounds()
+    {
+        
     }
 }

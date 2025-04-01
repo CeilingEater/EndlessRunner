@@ -13,14 +13,16 @@ public class PickUpManager : MonoBehaviour
     public bool isSame;
     private void Start()
     {
+        InvokeRepeating(nameof(SpawnPickups), 2.0f, 10f);
         _renderer = GetComponentInChildren<Renderer>();
         material = _renderer.material;
-        material.color = colours[Random.Range(0, colours.Length)];   
+        //material.color = colours[Random.Range(0, colours.Length)];   
     }
 
     void FixedUpdate()
     {
         //spawns pickups
+        //SpawnPickups();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -36,6 +38,7 @@ public class PickUpManager : MonoBehaviour
         if (material.color == colours[1])  //immunity is blue
         {
             //immune for few secs
+            Invoke(nameof(Immune), 10f);
         }
         if (material.color == colours[2])  //health is green
         {
@@ -43,15 +46,38 @@ public class PickUpManager : MonoBehaviour
                 return;
             PlayerController.Health++;
         }
-        /*if (playerRenderer.material.color == material.color)   //gameobject colour == pickup color
-        {
-            isSame = true;
-            return;  //return = exit 
-        }*/
         playerRenderer.material.color = material.color;
         //GameManager.Instance.IncrementScore(_renderer);  score wont be increased with pickups
         
         Destroy(gameObject);
         
+    }
+    
+    private void SpawnPickups()
+    {
+        //choose random colour [0,1,2]
+        //assign pickup to number
+        //spawn it Resources.Load<GameObject>("Prefabs/HealthPickup");
+        //spawn in a specific location
+        material.color = colours[Random.Range(0, colours.Length)];
+        if (material.color == colours[0])  //rock is red
+        {
+            //damages boss/obstacles in the current 'lane'
+            Resources.Load<GameObject>("Prefabs/RockPickup");
+        }
+        if (material.color == colours[1])  //immunity is blue
+        {
+            //immune for few secs
+            Resources.Load<GameObject>("Prefabs/ImmunePickup");
+        }
+        if (material.color == colours[2])  //health is green
+        {
+            Resources.Load<GameObject>("Prefabs/HealthPickup");
+        }
+    }
+
+    private void Immune(Collider other)
+    {
+        other.gameObject.GetComponent<Collider>().enabled = false; 
     }
 }
