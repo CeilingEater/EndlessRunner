@@ -3,13 +3,19 @@ using UnityEngine;
 
 public class PrefabManager : MonoBehaviour
 {
-    [SerializeField] private float xPlayerPosition = 0f;
     
-    [SerializeField] private float prefabMoveSpeed = 5f;
+    [SerializeField] private float prefabMoveSpeed = 30f;
     [SerializeField] private float xPrefabPosition = 50f;
-    [SerializeField] private float zPrefabMin = -10f, zPrefabMax = 10f;
+    [SerializeField] private float zPrefabMin = -5f, zPrefabMax = 5f;
     
     [SerializeField] private GameObject[] obstacles;
+    private List<GameObject> instantiatedPrefabs = new List<GameObject>(); //list to keep spawned prefabs in
+
+    public GameObject obstacleSpawner;
+    public GameObject obstacleEnd;
+    
+    
+    
     //List<GameObject> Obstacles = new List<GameObject>(); //rows first, columns second
     
     void Start()
@@ -23,46 +29,47 @@ public class PrefabManager : MonoBehaviour
         MovePrefabs();
     }
     
-    void MovePrefabs()
+    private void MovePrefabs()
     {
-        //transform.Translate(200f * Time.deltaTime, 0, 0);  //constant mvoing
-        
-        for (int i = 0; i < obstacles.Length; i++)
+        for (int i = 0; i < instantiatedPrefabs.Count; i++)
         {
-            if (obstacles[i] != null)
+            if (instantiatedPrefabs[i] != null)
             {
-                obstacles[i].transform.Translate(-prefabMoveSpeed, 0, 0 * Time.deltaTime);
+                instantiatedPrefabs[i].transform.position = Vector3.MoveTowards(instantiatedPrefabs[i].transform.position, obstacleEnd.transform.position, prefabMoveSpeed * Time.deltaTime);
             }
         }
+        
+        
     }
 
     private void SpawnPrefabs()
     {
-        //randomly spawns a plain obstacle
-        //has a chance of spawning an obstacle on top of the basic plat form
-        /*for (int i = 0; i < Obstacles.Count; i++)  //row
-        {
-            for (int j = 0; j < Obstacles[i].Length; j++) //column
-            {
-                GameObject jumpBar = Instantiate(Resources.Load<GameObject>("Prefabs/Level1/BasicPlat"), new Vector3(xPrefabPosition, yPrefabPosition, zPrefabPosition), Quaternion.identity); //idk if this is right but it autofilled so
-                j++;
-            }
-            i++;
-        }*/
 
         if (obstacles.Length == 0) return;
         
         GameObject spawnPrefab = obstacles[Random.Range(0, obstacles.Length)]; //spawn random prefab from array
-        
         float randomZ = Random.Range(zPrefabMin, zPrefabMax); //to spawn obstacle randomly in front of player
-        GameObject newPrefab = Instantiate(spawnPrefab, new Vector3(xPrefabPosition, 0.0f, randomZ), Quaternion.identity); //autofilled LOL i hope its right
+        GameObject newObstacle = Instantiate(spawnPrefab, new Vector3(xPrefabPosition, 0.0f, randomZ), Quaternion.identity); //autofilled LOL i hope its right
+
+        instantiatedPrefabs.Add(newObstacle);
         
+
     }
 
     private void DeletePrefabs()
     {
-        //IncrementScore();
-        //deletes prefabs after they pass the player
-        Resources.UnloadUnusedAssets();
+        for (int i = instantiatedPrefabs.Count - 1; i >= 0; i--) 
+        {
+            if (instantiatedPrefabs[i] != null)
+            {
+                if (instantiatedPrefabs[i].transform.position.z <= obstacleEnd.transform.position.z) //delete prefabs if they go past obstacleEnd
+                {
+                    Destroy(instantiatedPrefabs[i]);
+                    instantiatedPrefabs.RemoveAt(i);
+                    //IncrementScore();
+                }
+                
+            }
+        }
     }
 }

@@ -32,7 +32,8 @@ public class GameManager : MonoBehaviour
         
         Instance = this;  //instance is equal to original instance
         
-        //my little pony, my little pony,aaaahahahahahahaha my little pony, i used to wonder what friendship could be! (My little pony) And to you all shared its magic with me! Great adventure, tons of fun! a beautiful heart faithful and strong, sharing kindness, its an easy feat!
+        //my little pony, my little pony,aaaahahahahahahaha my little pony, i used to wonder what friendship could be! (My little pony) And to you all shared its magic with me!
+        //Great adventure, tons of fun! a beautiful heart faithful and strong, sharing kindness, its an easy feat!
         //
     }
 
