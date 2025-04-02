@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
@@ -8,6 +9,9 @@ public class GameManager : MonoBehaviour
 {
     [SerializeField] private UIController uiController;
     [SerializeField] private Renderer playerRenderer;  //added
+    [SerializeField] private TextMeshProUGUI gameOverTextMesh;
+    
+    public GameObject player;
     private readonly List<Renderer> _pickupRenderers = new List<Renderer>();
     bool _isGameOver;
     
@@ -98,4 +102,5 @@ public class GameManager : MonoBehaviour
         //return to main menu
         SceneManager.LoadScene("MainMenu");
     }
+    
 }
