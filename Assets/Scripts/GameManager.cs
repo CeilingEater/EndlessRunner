@@ -10,10 +10,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UIController uiController;
     [SerializeField] private Renderer playerRenderer;  //added
     [SerializeField] private TextMeshProUGUI gameOverTextMesh;
-    
-    public GameObject player;
     private readonly List<Renderer> _pickupRenderers = new List<Renderer>();
     bool _isGameOver;
+    
+    public GameObject player;
     
     //Singleton
     public static GameManager Instance { get; private set; }  //property
@@ -41,23 +41,19 @@ public class GameManager : MonoBehaviour
         //
     }
 
-    public void IncrementScore(Renderer pickupRenderer)
+    public void IncrementScore(bool isDestroyed)
     {
         if (_isGameOver)
             return;
         
-        _score++;
-        uiController.UpdateScoreDisplay(_score);
-        _pickupRenderers.Remove(pickupRenderer);
-        
-        if (_score >= _winscore)
+        if (isDestroyed == true)
         {
-            _isGameOver = true;
-            uiController.DisplayYouWin();
-            Invoke(nameof(ReturnToMainMenu), 3f);
+            _score++;
+            uiController.UpdateScoreDisplay(_score);
             return;
         }
-        
+        isDestroyed = false;
+        //_pickupRenderers.Remove(pickupRenderer);  use in pickup
         CheckLoseState();
         
     }

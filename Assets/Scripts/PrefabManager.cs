@@ -14,7 +14,7 @@ public class PrefabManager : MonoBehaviour
     public GameObject obstacleSpawner;
     public GameObject obstacleEnd;
     
-    
+    public static bool isObstacleDestroyed;
     
     //List<GameObject> Obstacles = new List<GameObject>(); //rows first, columns second
     
@@ -66,10 +66,10 @@ public class PrefabManager : MonoBehaviour
                 {
                     Destroy(instantiatedPrefabs[i]);
                     instantiatedPrefabs.RemoveAt(i);
-                    //IncrementScore();
                 }
                 
             }
         }
+        isObstacleDestroyed = true;
     }
 }

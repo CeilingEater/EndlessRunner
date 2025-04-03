@@ -13,10 +13,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 _move;
     private float _gravity;
     private float _yVelocity;
-    public static int Health = 5;
     private bool _jumpRequest;
-    private float _leftBounds;
-    private float _rightBounds;
 
     void Start()
     {
@@ -74,9 +71,5 @@ public class PlayerController : MonoBehaviour
     {
         return Physics.Raycast(transform.position, Vector3.down, 1.1f); //raycast sees if player is on ground
     }
-
-    private void CheckBounds()
-    {
-        
-    }
+    
 }
