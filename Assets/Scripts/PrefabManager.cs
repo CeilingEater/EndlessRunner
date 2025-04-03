@@ -41,6 +41,8 @@ public class PrefabManager : MonoBehaviour
         
         
     }
+    
+    
 
     private void SpawnPrefabs()
     {
@@ -66,10 +68,16 @@ public class PrefabManager : MonoBehaviour
                 {
                     Destroy(instantiatedPrefabs[i]);
                     instantiatedPrefabs.RemoveAt(i);
+                    isObstacleDestroyed = true;
                 }
                 
             }
         }
-        isObstacleDestroyed = true;
+        
+        if (isObstacleDestroyed)
+        {
+            GameManager.Instance.IncrementScore(isObstacleDestroyed);
+            isObstacleDestroyed = false; 
+        }
     }
 }

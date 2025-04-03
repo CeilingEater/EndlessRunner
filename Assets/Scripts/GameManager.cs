@@ -54,7 +54,6 @@ public class GameManager : MonoBehaviour
         }
         isDestroyed = false;
         //_pickupRenderers.Remove(pickupRenderer);  use in pickup
-        CheckLoseState();
         
     }
     
