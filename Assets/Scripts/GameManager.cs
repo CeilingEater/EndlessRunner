@@ -41,20 +41,13 @@ public class GameManager : MonoBehaviour
         //
     }
 
-    public void IncrementScore(bool isDestroyed)
+    public void IncrementScore(int amount)
     {
         if (_isGameOver)
             return;
         
-        if (isDestroyed == true)
-        {
-            _score++;
-            uiController.UpdateScoreDisplay(_score);
-            return;
-        }
-        isDestroyed = false;
-        //_pickupRenderers.Remove(pickupRenderer);  use in pickup
-        
+        _score += amount;
+        uiController.UpdateScoreDisplay(_score);
     }
     
     private void Start()
@@ -73,21 +66,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void CheckLoseState()
+    public void GameOver()
     {
-        if (_isGameOver)
+        /*if (_isGameOver)
         {
             return;
-        }
-        
-        foreach (Renderer pickupRenderer in _pickupRenderers)
-        {
-            if (pickupRenderer.material.color != playerRenderer.material.color)
-                return;
-        }
-        
+        }*/
         _isGameOver = true;
-        uiController.DisplayGameOver();
+        Time.timeScale = 0f; //pause game
+        uiController.DisplayGameOver(_score);
         Invoke(nameof(ReturnToMainMenu), 3f);
     }
 

@@ -16,17 +16,16 @@ public class PrefabManager : MonoBehaviour
     
     public static bool isObstacleDestroyed;
     
-    //List<GameObject> Obstacles = new List<GameObject>(); //rows first, columns second
     
     void Start()
     {
-        InvokeRepeating(nameof(SpawnPrefabs), 1.0f, 2f);  //spawns prefabs in intervals
-        InvokeRepeating(nameof(DeletePrefabs), 1.0f, 12f);  //deletes prefabs after a certain num of secs
+        InvokeRepeating(nameof(SpawnPrefabs), 1.0f, 1f);  //spawns prefabs in intervals
     }
 
     void Update()
     {
         MovePrefabs();
+        DeletePrefabs();
     }
     
     private void MovePrefabs()
@@ -37,15 +36,26 @@ public class PrefabManager : MonoBehaviour
             {
                 instantiatedPrefabs[i].transform.position = Vector3.MoveTowards(instantiatedPrefabs[i].transform.position, obstacleEnd.transform.position, prefabMoveSpeed * Time.deltaTime);
             }
-        }
-        
-        
+        }       
     }
     
-    
+    /*public GameObject player;
+    public float spawnDistanceMin = -5f;
+    public float spawnDistanceMax = 5f;*/
 
     private void SpawnPrefabs()
     {
+        
+        /*if (obstacles.Length == 0 || player == null) return;
+
+        GameObject spawnPrefab = obstacles[Random.Range(0, obstacles.Length)];
+
+        float randomZ = player.transform.position.z + Random.Range(spawnDistanceMin, spawnDistanceMax);
+        float xOffset = Random.Range(-spawnDistanceMin, spawnDistanceMin);
+
+        Vector3 spawnPosition = new Vector3(player.transform.position.x + xOffset, 0.0f, randomZ);
+        GameObject newObstacle = Instantiate(spawnPrefab, spawnPosition, Quaternion.identity);*/
+        
 
         if (obstacles.Length == 0) return;
         
@@ -60,6 +70,8 @@ public class PrefabManager : MonoBehaviour
 
     private void DeletePrefabs()
     {
+        int obstaclesDestroyed = 0;
+        
         for (int i = instantiatedPrefabs.Count - 1; i >= 0; i--) 
         {
             if (instantiatedPrefabs[i] != null)
@@ -68,16 +80,16 @@ public class PrefabManager : MonoBehaviour
                 {
                     Destroy(instantiatedPrefabs[i]);
                     instantiatedPrefabs.RemoveAt(i);
-                    isObstacleDestroyed = true;
-                }
-                
+                    obstaclesDestroyed++; //increment for each counter
+                }          
             }
         }
         
-        if (isObstacleDestroyed)
+        Debug.Log("prefabs deleted");
+        
+        if (obstaclesDestroyed > 0)
         {
-            GameManager.Instance.IncrementScore(isObstacleDestroyed);
-            isObstacleDestroyed = false; 
+            GameManager.Instance.IncrementScore(obstaclesDestroyed);
         }
     }
 }

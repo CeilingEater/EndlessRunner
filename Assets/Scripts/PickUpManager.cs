@@ -18,51 +18,36 @@ public class PickUpManager : MonoBehaviour
 
     public static bool IsPickupDestroyed;
     private bool isImmune = false;
-    
 
-    public bool isSame;
+    private float duration = 5f;
     void Start()
     {
-        InvokeRepeating(nameof(SpawnPickups), 1.0f, 2f);  //spawns prefabs in intervals
-        InvokeRepeating(nameof(DeletePickups), 1.0f, 4f);  //deletes prefabs after a certain num of secs
+        InvokeRepeating(nameof(SpawnPickups), 1.0f, 1f);  //spawns prefabs in intervals
+        //InvokeRepeating(nameof(DeletePickups), 1.0f, 4f);  //deletes prefabs after a certain num of secs
     }
 
     void Update()
     {
-        MovePrefabs();
+        MovePickups();
+        DeletePickups();
     }
     
-    private void MovePrefabs()
+    private void OnTriggerEnter(Collider other) //detect player collision when they touch a pickup
     {
-        for (int i = 0; i < _instantiatedPickups.Count; i++)
+        if (!other.CompareTag("Player"))
+            return;
+
+        if (gameObject.CompareTag("ImmunePickup"))
         {
-            if (_instantiatedPickups[i] != null)
+            PlayerImmunity playerScript = other.GetComponent<PlayerImmunity>();
+            if (playerScript != null)
             {
-                _instantiatedPickups[i].transform.position = Vector3.MoveTowards(_instantiatedPickups[i].transform.position, pickupEnd.transform.position, pickupMoveSpeed * Time.deltaTime);
+                float duration = 5f;
+                playerScript.StartCoroutine(playerScript.ActivateImmunity(duration));
             }
         }
-        
-        
-    }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (!other.CompareTag("Player"))  //if it isnt the player, ignore
-            return;
-        
-        
-        if (gameObject.CompareTag("ImmunePickup")) //immunity pickup
-        {
-            StartCoroutine(ActivateImmunity());
-        }
-       
-        /*else if (gameObject.CompareTag("SpeedPickup"))
-        {
-            
-        }*/
-        
-        _instantiatedPickups.Remove(gameObject);
-        Destroy(gameObject);
+        Destroy(gameObject); // remove pickup after use
     }
     
     private void SpawnPickups()
@@ -79,30 +64,6 @@ public class PickUpManager : MonoBehaviour
 
     }
     
-    private IEnumerator ActivateImmunity() //not working im going to kil myseldf
-    {
-        isImmune = true;
-
-        Debug.Log("immune");
-        Collider playerCollider = GetComponent<Collider>();
-        
-        if (playerCollider != null)
-        {
-            playerCollider.enabled = false;
-        }
-        //turn off collisions
-
-        yield return new WaitForSeconds(5f); //https://docs.unity3d.com/6000.0/Documentation/ScriptReference/WaitForSeconds.html
-        
-        if (playerCollider != null)
-        {
-            playerCollider.enabled = true;
-        }
-        
-        isImmune = false;
-        
-        Debug.Log("not immune");
-    }
 
     private void DeletePickups()
     {
@@ -120,9 +81,16 @@ public class PickUpManager : MonoBehaviour
         }
         IsPickupDestroyed = true;
     }
-
-    private void Immune(Collider other)
+    
+    
+    private void MovePickups()
     {
-        other.gameObject.GetComponent<Collider>().enabled = false; 
+        for (int i = 0; i < _instantiatedPickups.Count; i++)
+        {
+            if (_instantiatedPickups[i] != null)
+            {
+                _instantiatedPickups[i].transform.position = Vector3.MoveTowards(_instantiatedPickups[i].transform.position, pickupEnd.transform.position, pickupMoveSpeed * Time.deltaTime);
+            }
+        }
     }
 }

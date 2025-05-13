@@ -11,23 +11,37 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody _rigidbody; 
     private Vector3 _move;
+    private Vector3 _jump;
     private float _gravity;
     private float _yVelocity;
     private bool _jumpRequest;
 
+    public bool isImmune = false;
+
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>(); //dont interact in update
+        //_rigidbody.linearDamping = 5f;
     }
 
 
     void Update()
     {
-        _move = new Vector3(
+        float horizontal = 0f;
+        float vertical = 0f;
+        
+        if (Input.GetKey(KeyCode.A)) horizontal = -1f;
+        if (Input.GetKey(KeyCode.D)) horizontal = 1f;
+        if (Input.GetKey(KeyCode.Space)) vertical = 1f;
+        
+        _move = new Vector3(0f, 0f, horizontal);
+        _jump = new Vector3(0f, vertical, 0f);
+        
+        /*_move = new Vector3(
             Input.GetAxis("Vertical"),
             Input.GetAxis("Jump"),  //maybe back to zero
             Input.GetAxis("Horizontal")
-        );
+        );*/
         
         if (Input.GetKeyDown(KeyCode.Space) && IsGrounded()) //can only jump if player is on ground, stops flying
         {
@@ -38,7 +52,15 @@ public class PlayerController : MonoBehaviour
 
     void FixedUpdate() //interact with rigidbody in fixedupdate
     {
-        if (_move.magnitude < 0.01f)
+        //jump//
+        
+        if (_jumpRequest)
+        {
+            _rigidbody.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
+            _jumpRequest = false;
+        }
+        
+        if (_move.sqrMagnitude < 0.001f)
         {
             _rigidbody.linearVelocity = new Vector3(0, _rigidbody.linearVelocity.y, 0); //grav
             return;
@@ -55,16 +77,7 @@ public class PlayerController : MonoBehaviour
         
         _rigidbody.MoveRotation(newrotation);
         _rigidbody.angularVelocity = Vector3.zero;
-            
-        
-        //jump//
-        
-        if (_jumpRequest)
-        {
-            _rigidbody.AddForce(Vector3.up * jumpSpeed, ForceMode.Impulse);
-            _jumpRequest = false;
-        }
-        
+
     }
     
     bool IsGrounded() 

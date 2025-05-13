@@ -8,12 +8,16 @@ public class UIController : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI scoreTextMesh;
     [SerializeField] private TextMeshProUGUI gameOverTextMesh;
+    [SerializeField] private TextMeshProUGUI FinalScoreTextMesh;
     [SerializeField] private Button restartButton;
+    
 
     private void Awake()
     {
         gameOverTextMesh.gameObject.SetActive(false);  
         restartButton.gameObject.SetActive(false);
+        FinalScoreTextMesh.gameObject.SetActive(false);
+        
         UpdateScoreDisplay(0);
     }
     
@@ -25,6 +29,7 @@ public class UIController : MonoBehaviour
     private void OnRestartButtonClicked()
     {
         SceneManager.LoadScene("LevelStomp");
+        Time.timeScale = 1f;
     }
   
     
@@ -40,11 +45,16 @@ public class UIController : MonoBehaviour
         gameOverTextMesh.gameObject.SetActive(true);
     }
 
-    public void DisplayGameOver()
+    public void DisplayGameOver(int score)
     {
         gameOverTextMesh.text = "GAME OVER";
         gameOverTextMesh.gameObject.SetActive(true);
+        
         restartButton.gameObject.SetActive(true);
+        
+        FinalScoreTextMesh.text = "Score: " + score;
+        FinalScoreTextMesh.gameObject.SetActive(true);
+        
     }
     
     
