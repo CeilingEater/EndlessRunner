@@ -17,11 +17,13 @@ public class PlayerController : MonoBehaviour
     private bool _jumpRequest;
 
     public bool isImmune = false;
+    
+    private PlayerFlight playerFlight;
 
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>(); //dont interact in update
-        //_rigidbody.linearDamping = 5f;
+        playerFlight = GetComponent<PlayerFlight>();
     }
 
 
@@ -36,12 +38,6 @@ public class PlayerController : MonoBehaviour
         
         _move = new Vector3(0f, 0f, horizontal);
         _jump = new Vector3(0f, vertical, 0f);
-        
-        /*_move = new Vector3(
-            Input.GetAxis("Vertical"),
-            Input.GetAxis("Jump"),  //maybe back to zero
-            Input.GetAxis("Horizontal")
-        );*/
         
         if (Input.GetKeyDown(KeyCode.Space) && IsGrounded()) //can only jump if player is on ground, stops flying
         {
@@ -83,6 +79,15 @@ public class PlayerController : MonoBehaviour
     bool IsGrounded() 
     {
         return Physics.Raycast(transform.position, Vector3.down, 1.1f); //raycast sees if player is on ground
+    }
+    
+    //for flying pickup
+    public void ActivateFlight(float duration, float height)
+    {
+        if (playerFlight != null && !playerFlight.isFlying)
+        {
+            StartCoroutine(playerFlight.Fly(duration, height));
+        }
     }
     
 }

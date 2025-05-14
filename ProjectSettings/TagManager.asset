@@ -7,6 +7,7 @@ TagManager:
   - Pickup
   - Obstacle
   - ImmunePickup
+  - FlyPickup
   layers:
   - Default
   - TransparentFX

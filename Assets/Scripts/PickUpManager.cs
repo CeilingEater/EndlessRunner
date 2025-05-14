@@ -17,13 +17,10 @@ public class PickUpManager : MonoBehaviour
     public GameObject pickupEnd;
 
     public static bool IsPickupDestroyed;
-    private bool isImmune = false;
-
-    private float duration = 5f;
+    
     void Start()
     {
         InvokeRepeating(nameof(SpawnPickups), 1.0f, 1f);  //spawns prefabs in intervals
-        //InvokeRepeating(nameof(DeletePickups), 1.0f, 4f);  //deletes prefabs after a certain num of secs
     }
 
     void Update()
@@ -39,15 +36,26 @@ public class PickUpManager : MonoBehaviour
 
         if (gameObject.CompareTag("ImmunePickup"))
         {
-            PlayerImmunity playerScript = other.GetComponent<PlayerImmunity>();
-            if (playerScript != null)
+            PlayerImmunity playerImmunity = other.GetComponent<PlayerImmunity>();
+            if (playerImmunity != null)
             {
-                float duration = 5f;
-                playerScript.StartCoroutine(playerScript.ActivateImmunity(duration));
+                playerImmunity.StartCoroutine(playerImmunity.ActivateImmunity(5f)); //5 second immunity
             }
         }
+        
+        
+        else if (gameObject.CompareTag("FlyPickup"))
+        {
+            PlayerController controller = other.GetComponent<PlayerController>();
+            if (controller != null)
+            {
+                controller.ActivateFlight(5f, 8f);
+            }
 
-        Destroy(gameObject); // remove pickup after use
+            Destroy(gameObject);
+        }
+
+        Destroy(gameObject);
     }
     
     private void SpawnPickups()
@@ -55,12 +63,11 @@ public class PickUpManager : MonoBehaviour
 
         if (pickups.Length == 0) return;
         
-        GameObject spawnPrefab = pickups[Random.Range(0, pickups.Length)]; //spawn random prefab from array
+        GameObject spawnPickup = pickups[Random.Range(0, pickups.Length)]; //spawn random prefab from array
         float randomZ = Random.Range(zPickupMin, zPickupMax); 
-        GameObject newPickup = Instantiate(spawnPrefab, pickupSpawner.transform.position + new Vector3(0, 2, randomZ), Quaternion.identity);
+        GameObject newPickup = Instantiate(spawnPickup, pickupSpawner.transform.position + new Vector3(0, 2, randomZ), Quaternion.identity);
 
         _instantiatedPickups.Add(newPickup);
-        
 
     }
     
@@ -89,7 +96,7 @@ public class PickUpManager : MonoBehaviour
         {
             if (_instantiatedPickups[i] != null)
             {
-                _instantiatedPickups[i].transform.position = Vector3.MoveTowards(_instantiatedPickups[i].transform.position, pickupEnd.transform.position, pickupMoveSpeed * Time.deltaTime);
+                _instantiatedPickups[i].transform.position += Vector3.right * pickupMoveSpeed * Time.deltaTime;
             }
         }
     }

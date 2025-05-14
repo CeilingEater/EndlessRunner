@@ -6,29 +6,25 @@ public class PlayerDeath : MonoBehaviour
     [SerializeField] private UIController uiController;
     [SerializeField] private GameManager gameManager;
     public GameObject player;
-
+    
+    
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Obstacle")) //obstacle prefabs are tagged with "Obstacle"
+        if (collision.gameObject.CompareTag("Obstacle"))
         {
-            Destroy(player);
-            GameManager.Instance.GameOver();
-        }
-
-
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            PlayerImmunity immunity = collision.gameObject.GetComponent<PlayerImmunity>();
+            PlayerImmunity immunity = player.GetComponent<PlayerImmunity>();
             if (immunity != null && immunity.isImmune)
             {
-                Debug.Log("Player is immune. No damage.");
-                return; // ignore this collision
+                Debug.Log("immune so dont die");
+                return;
             }
 
-            // Not immune: game over
-            Destroy(collision.gameObject);
+            Debug.Log("not immune so die");
+            Destroy(player);
             GameManager.Instance.GameOver();
+            return;
         }
+        
     }
 
     private void ReturnToMainMenu()

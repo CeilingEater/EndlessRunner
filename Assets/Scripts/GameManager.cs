@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     //get can be accessed from outside the class, but not set
 
     private int _score = 0;
-    private int _winscore = 0;
+    //private int _winscore = 0;
     private GameObject _player;
     private GameObject[] _pickups;
 
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
         
         //my little pony, my little pony,aaaahahahahahahaha my little pony, i used to wonder what friendship could be! (My little pony) And to you all shared its magic with me!
         //Great adventure, tons of fun! a beautiful heart faithful and strong, sharing kindness, its an easy feat!
-        //
+        //and magic makes it all complete!
     }
 
     public void IncrementScore(int amount)
@@ -48,22 +48,6 @@ public class GameManager : MonoBehaviour
         
         _score += amount;
         uiController.UpdateScoreDisplay(_score);
-    }
-    
-    private void Start()
-    {
-       InitialisePickupRenderers();
-       _winscore = _pickupRenderers.Count;
-    }
-
-    private void InitialisePickupRenderers()
-    {
-        GameObject[] pickups = GameObject.FindGameObjectsWithTag("Pickup");
-
-        for (int i = 0; i < pickups.Length; i++)
-        {
-            _pickupRenderers.Add(pickups[i].GetComponentInChildren<Renderer>());
-        }
     }
 
     public void GameOver()
@@ -85,4 +69,41 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
     
+    // material offset moving
+
+    public Material material;
+    public float speed = 30f;
+
+    private float timeOffset;
+
+    private void Start()
+    {
+        if (!material)
+        {
+            Renderer renderer = GetComponent<Renderer>();
+            if (renderer != null && renderer.material != null)
+            {
+                material = renderer.material;
+            }
+            else
+            {
+                Debug.LogError("No material assigned and no Renderer component found.");
+                enabled = false;
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if (material)
+        {
+            timeOffset += Time.deltaTime * speed;
+
+            // Calculate the offset (example: a scroll animation)
+            Vector2 offset = new Vector2(timeOffset * 0.1f, 0f); // Scroll horizontally
+
+            // Set the material's texture offset
+            material.SetTextureOffset("_MainTex", offset);
+        }
+    }
 }

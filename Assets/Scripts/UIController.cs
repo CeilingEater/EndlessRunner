@@ -31,7 +31,6 @@ public class UIController : MonoBehaviour
         SceneManager.LoadScene("LevelStomp");
         Time.timeScale = 1f;
     }
-  
     
     
     public void UpdateScoreDisplay(int score)

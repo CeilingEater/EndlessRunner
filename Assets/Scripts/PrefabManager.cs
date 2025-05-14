@@ -6,7 +6,7 @@ public class PrefabManager : MonoBehaviour
     
     [SerializeField] private float prefabMoveSpeed = 30f;
     [SerializeField] private float xPrefabPosition = 50f;
-    [SerializeField] private float zPrefabMin = -5f, zPrefabMax = 5f;
+    [SerializeField] private float zPrefabMin = -4.5f, zPrefabMax = 4.5f;
     
     [SerializeField] private GameObject[] obstacles;
     private List<GameObject> instantiatedPrefabs = new List<GameObject>(); //list to keep spawned prefabs in
@@ -34,14 +34,11 @@ public class PrefabManager : MonoBehaviour
         {
             if (instantiatedPrefabs[i] != null)
             {
-                instantiatedPrefabs[i].transform.position = Vector3.MoveTowards(instantiatedPrefabs[i].transform.position, obstacleEnd.transform.position, prefabMoveSpeed * Time.deltaTime);
+                instantiatedPrefabs[i].transform.position += Vector3.right * prefabMoveSpeed * Time.deltaTime;
             }
         }       
     }
     
-    /*public GameObject player;
-    public float spawnDistanceMin = -5f;
-    public float spawnDistanceMax = 5f;*/
 
     private void SpawnPrefabs()
     {
@@ -65,6 +62,7 @@ public class PrefabManager : MonoBehaviour
 
         instantiatedPrefabs.Add(newObstacle);
         
+        //Debug.Log("obstacles spawned");
 
     }
 
@@ -76,16 +74,17 @@ public class PrefabManager : MonoBehaviour
         {
             if (instantiatedPrefabs[i] != null)
             {
-                if (instantiatedPrefabs[i].transform.position.z <= obstacleEnd.transform.position.z) //delete prefabs if they go past obstacleEnd
+                if (instantiatedPrefabs[i].transform.position.x >= obstacleEnd.transform.position.x) //delete prefabs if they go past obstacleEnd
                 {
                     Destroy(instantiatedPrefabs[i]);
                     instantiatedPrefabs.RemoveAt(i);
+                    //Debug.Log("obstacles deleted");
                     obstaclesDestroyed++; //increment for each counter
                 }          
             }
         }
         
-        Debug.Log("prefabs deleted");
+        
         
         if (obstaclesDestroyed > 0)
         {
