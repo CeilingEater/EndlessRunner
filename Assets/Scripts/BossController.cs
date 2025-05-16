@@ -2,15 +2,26 @@ using UnityEngine;
 
 public class BossController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public GameObject bossPrefab;
+    public Transform spawnPoint;
+
+    public float levelDuration = 500;
+    public float timeElapsed;
+    public bool bossActive = false;
+   
+    void FixedUpdate()
     {
-        
+        timeElapsed += Time.fixedDeltaTime;
+
+        if (!bossActive && timeElapsed >= levelDuration/2f)
+        {
+            SpawnBoss();
+            bossActive = true;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    private void SpawnBoss()
     {
-        
+        GameObject boss = Instantiate(bossPrefab, spawnPoint.position, Quaternion.identity); //spawns boss in specific location
     }
 }
