@@ -20,5 +20,10 @@ public class PlayerImmunity : MonoBehaviour
     {
         return isImmune;
     }
-    
+
+    public void DisplayImmune()
+    {
+        //gameOverTextMesh.text = "You are immune!";
+        //gameOverTextMesh.gameObject.SetActive(true);
+    }
 }

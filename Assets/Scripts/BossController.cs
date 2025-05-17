@@ -23,5 +23,7 @@ public class BossController : MonoBehaviour
     private void SpawnBoss()
     {
         GameObject boss = Instantiate(bossPrefab, spawnPoint.position, Quaternion.identity); //spawns boss in specific location
+        boss.transform.Rotate(0, 90, 0); //pug didnt hv same rotation as prefab :(
+
     }
 }
