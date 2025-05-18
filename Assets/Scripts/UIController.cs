@@ -9,6 +9,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI scoreTextMesh;
     [SerializeField] private TextMeshProUGUI gameOverTextMesh;
     [SerializeField] private TextMeshProUGUI FinalScoreTextMesh;
+    [SerializeField] private TextMeshProUGUI pickupText;
     [SerializeField] private Button restartButton;
     
     public Image flyIcon;
@@ -78,6 +79,10 @@ public class UIController : MonoBehaviour
         doubleJumpIcon.enabled = state;
     }
 
-    
+    public void DisplayPickup(string pickupName)
+    {
+        pickupText.gameObject.SetActive(true);
+        pickupText.text = pickupName;
+    }
     
 }

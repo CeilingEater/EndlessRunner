@@ -6,7 +6,7 @@ public class PrefabManager : MonoBehaviour
     
     [SerializeField] private float prefabMoveSpeed = 30f;
     [SerializeField] private float xPrefabPosition = 50f;
-    [SerializeField] private float zPrefabMin = -4.5f, zPrefabMax = 4.5f;
+    [SerializeField] private float zPrefabMin = -2.75f, zPrefabMax = 2.75f; //was 4.5f
     
     [SerializeField] private GameObject[] obstacles;
     private List<GameObject> instantiatedPrefabs = new List<GameObject>(); //list to keep spawned prefabs in

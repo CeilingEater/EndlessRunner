@@ -10,7 +10,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] [Range(0.001f, 1f)] private float rotationSmoothness = 0.5f;
 
     private Rigidbody _rigidbody; 
-    private Light _light;
     private Vector3 _move;
     private Vector3 _jump;
     private float _gravity;
