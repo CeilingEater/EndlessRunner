@@ -16,15 +16,22 @@ public class PlayerController : MonoBehaviour
     private float _gravity;
     private float _yVelocity;
     private bool _jumpRequest;
-
+    
+    //double jump pickup
+    private bool _canDoubleJump = false;
+    private PlayerDoubleJump _playerDoubleJump;
+    
+    //immune pickup
     public bool isImmune = false;
     
+    //fly pickup
     private PlayerFlight playerFlight;
 
     void Start()
     {
         _rigidbody = GetComponent<Rigidbody>(); //dont interact in update
         playerFlight = GetComponent<PlayerFlight>();
+        _playerDoubleJump = GetComponent<PlayerDoubleJump>();
     }
 
 
@@ -40,10 +47,25 @@ public class PlayerController : MonoBehaviour
         _move = new Vector3(0f, 0f, horizontal);
         _jump = new Vector3(0f, vertical, 0f);
         
-        if (Input.GetKeyDown(KeyCode.Space) && IsGrounded()) //can only jump if player is on ground, stops flying
+        
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (IsGrounded())
+            {
+                _jumpRequest = true;
+                _canDoubleJump = true; // allow double jump after grounded jump
+            }
+            else if (_playerDoubleJump.hasDoubleJump && _canDoubleJump)
+            {
+                _jumpRequest = true;
+                _canDoubleJump = false; // only allow one extra jump
+            }
+        }
+        
+        /*if (Input.GetKeyDown(KeyCode.Space) && IsGrounded()) //can only jump if player is on ground, stops flying
         {
             _jumpRequest = true;
-        }
+        }*/
             
     }
 
@@ -91,4 +113,6 @@ public class PlayerController : MonoBehaviour
         }
     }
     
+    
+
 }

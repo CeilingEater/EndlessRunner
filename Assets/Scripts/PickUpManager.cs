@@ -51,8 +51,16 @@ public class PickUpManager : MonoBehaviour
             {
                 controller.ActivateFlight(5f, 8f);
             }
-
-            Destroy(gameObject);
+            
+        }
+        
+        else if (gameObject.CompareTag("DoubleJumpPickup"))
+        {
+            PlayerDoubleJump playerDoubleJump = other.GetComponent<PlayerDoubleJump>();
+            if (playerDoubleJump != null)
+            {
+                playerDoubleJump.StartCoroutine(playerDoubleJump.ActivateDoubleJump(5f));
+            }
         }
 
         Destroy(gameObject);

@@ -11,12 +11,19 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI FinalScoreTextMesh;
     [SerializeField] private Button restartButton;
     
+    public Image flyIcon;
+    public Image immuneIcon;
+    public Image doubleJumpIcon;
 
     private void Awake()
     {
         gameOverTextMesh.gameObject.SetActive(false);  
         restartButton.gameObject.SetActive(false);
         FinalScoreTextMesh.gameObject.SetActive(false);
+        
+        flyIcon.enabled = false;
+        immuneIcon.enabled = false;
+        doubleJumpIcon.enabled = false;
         
         UpdateScoreDisplay(0);
     }
@@ -55,6 +62,22 @@ public class UIController : MonoBehaviour
         FinalScoreTextMesh.gameObject.SetActive(true);
         
     }
+    
+    public void SetFlyIcon(bool state)
+    {
+        flyIcon.enabled = state;
+    }
+
+    public void SetImmuneIcon(bool state)
+    {
+        immuneIcon.enabled = state;
+    }
+
+    public void SetDoubleJumpIcon(bool state)
+    {
+        doubleJumpIcon.enabled = state;
+    }
+
     
     
 }
