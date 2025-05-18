@@ -52,12 +52,20 @@ public class PlayerController : MonoBehaviour
             if (IsGrounded())
             {
                 _jumpRequest = true;
-                _canDoubleJump = true; // allow double jump after grounded jump
+                
+                if (_playerDoubleJump.hasDoubleJump)
+                {
+                    _canDoubleJump = true;
+                }
+                else
+                {
+                    _canDoubleJump = false;
+                }
             }
             else if (_playerDoubleJump.hasDoubleJump && _canDoubleJump)
             {
                 _jumpRequest = true;
-                _canDoubleJump = false; // only allow one extra jump
+                _canDoubleJump = false;
             }
         }
         

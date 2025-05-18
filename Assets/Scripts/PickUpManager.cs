@@ -20,7 +20,7 @@ public class PickUpManager : MonoBehaviour
     
     void Start()
     {
-        InvokeRepeating(nameof(SpawnPickups), 1.0f, 1f);  //spawns prefabs in intervals
+        InvokeRepeating(nameof(SpawnPickups), 1.0f, 3f);  //spawns prefabs in intervals
     }
 
     void Update()
