@@ -6,11 +6,17 @@ public class PlayerImmunity : MonoBehaviour
     private UIController uiController;
     public bool isImmune = false;
     
+    public void Start()
+    {
+        uiController = FindAnyObjectByType<UIController>();
+    }
+    
     // immunity coroutine
     public IEnumerator ActivateImmunity(float duration)
     {
         isImmune = true;
         uiController?.SetImmuneIcon(true);
+        
         yield return new WaitForSeconds(duration);
 
         isImmune = false;
@@ -18,7 +24,7 @@ public class PlayerImmunity : MonoBehaviour
         
     }
 
-    public bool IsImmune()
+    /*public bool IsImmune()
     {
         return isImmune;
     }
@@ -27,5 +33,5 @@ public class PlayerImmunity : MonoBehaviour
     {
         //uiController..text = "You are immune!";
         //gameOverTextMesh.gameObject.SetActive(true);
-    }
+    }*/
 }

@@ -79,10 +79,6 @@ public class UIController : MonoBehaviour
         doubleJumpIcon.enabled = state;
     }
 
-    public void DisplayPickup(string pickupName)
-    {
-        pickupText.gameObject.SetActive(true);
-        pickupText.text = pickupName;
-    }
+    
     
 }

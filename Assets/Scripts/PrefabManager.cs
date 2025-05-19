@@ -7,6 +7,7 @@ public class PrefabManager : MonoBehaviour
     [SerializeField] private float prefabMoveSpeed = 30f;
     [SerializeField] private float xPrefabPosition = 50f;
     [SerializeField] private float zPrefabMin = -2.5f, zPrefabMax = 2.5f; //was 4.5f
+    [SerializeField] private float yRotationMin = -90, yRotationMax = 90f;
     
     [SerializeField] private GameObject[] obstacles;
     private List<GameObject> instantiatedPrefabs = new List<GameObject>(); //list to keep spawned prefabs in
@@ -58,7 +59,12 @@ public class PrefabManager : MonoBehaviour
         
         GameObject spawnPrefab = obstacles[Random.Range(0, obstacles.Length)]; //spawn random prefab from array
         float randomZ = Random.Range(zPrefabMin, zPrefabMax); //to spawn obstacle randomly in front of player
-        GameObject newObstacle = Instantiate(spawnPrefab, new Vector3(xPrefabPosition, 0.0f, randomZ), Quaternion.identity); //autofilled LOL i hope its right
+        
+        float randomYRotation = Random.Range(yRotationMin, yRotationMax); // rotation
+
+        Quaternion randomRotation = Quaternion.Euler(0f, randomYRotation, 0f);
+        
+        GameObject newObstacle = Instantiate(spawnPrefab, new Vector3(xPrefabPosition, 0.0f, randomZ), randomRotation); //autofilled LOL i hope its right
 
         instantiatedPrefabs.Add(newObstacle);
         

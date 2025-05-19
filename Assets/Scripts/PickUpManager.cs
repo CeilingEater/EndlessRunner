@@ -12,6 +12,8 @@ public class PickUpManager : MonoBehaviour
     private List<GameObject> _instantiatedPickups = new List<GameObject>(); //list to keep spawned pickups in
     private Material _material;
     private Renderer _playerRenderer;
+    
+    private UIController uiController;
 
     public GameObject pickupSpawner;
     public GameObject pickupEnd;
@@ -21,6 +23,7 @@ public class PickUpManager : MonoBehaviour
     void Start()
     {
         InvokeRepeating(nameof(SpawnPickups), 1.0f, 3f);  //spawns prefabs in intervals
+        uiController = FindAnyObjectByType<UIController>();
     }
 
     void Update()
@@ -33,6 +36,9 @@ public class PickUpManager : MonoBehaviour
     {
         if (!other.CompareTag("Player"))
             return;
+        
+        if (uiController == null)
+            uiController = FindAnyObjectByType<UIController>();
 
         if (gameObject.CompareTag("ImmunePickup"))
         {
@@ -40,6 +46,7 @@ public class PickUpManager : MonoBehaviour
             if (playerImmunity != null)
             {
                 playerImmunity.StartCoroutine(playerImmunity.ActivateImmunity(5f)); //5 second immunity
+                uiController.SetImmuneIcon(true);
             }
         }
         
@@ -50,6 +57,7 @@ public class PickUpManager : MonoBehaviour
             if (controller != null)
             {
                 controller.ActivateFlight(5f, 8f);
+                uiController.SetFlyIcon(true);
             }
             
         }
@@ -60,6 +68,7 @@ public class PickUpManager : MonoBehaviour
             if (playerDoubleJump != null)
             {
                 playerDoubleJump.StartCoroutine(playerDoubleJump.ActivateDoubleJump(5f));
+                uiController.SetDoubleJumpIcon(true);
             }
         }
 

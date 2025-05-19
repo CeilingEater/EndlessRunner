@@ -6,6 +6,11 @@ public class PlayerDoubleJump : MonoBehaviour
 {
     private UIController uiController;
     public bool hasDoubleJump = false;
+    
+    public void Start()
+    {
+        uiController = FindAnyObjectByType<UIController>();
+    }
 
     public IEnumerator ActivateDoubleJump(float duration)
     {

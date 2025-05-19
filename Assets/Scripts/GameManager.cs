@@ -87,7 +87,6 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Debug.LogError("No material assigned and no Renderer component found.");
                 enabled = false;
             }
         }

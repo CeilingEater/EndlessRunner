@@ -5,9 +5,9 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     //[SerializeField] private int health = 5;
-    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpSpeed = 30f;
-    [SerializeField] [Range(0.001f, 1f)] private float rotationSmoothness = 0.5f;
+    //[SerializeField] [Range(0.001f, 1f)] private float rotationSmoothness = 0.5f;
 
     private Rigidbody _rigidbody; 
     private Vector3 _move;
@@ -99,9 +99,9 @@ public class PlayerController : MonoBehaviour
         float rotationAngle = Mathf.Atan2(velocity.x, velocity.z);
         Quaternion currentRotation = _rigidbody.rotation;
         Quaternion targetRotation = Quaternion.Euler(0, rotationAngle * Mathf.Rad2Deg, 0);
-        Quaternion newrotation = Quaternion.Lerp(currentRotation, targetRotation, rotationSmoothness) ; 
+        //Quaternion newrotation = Quaternion.Lerp(currentRotation, targetRotation, rotationSmoothness) ; 
         
-        _rigidbody.MoveRotation(newrotation);
+        //_rigidbody.MoveRotation(newrotation);
         _rigidbody.angularVelocity = Vector3.zero;
 
     }

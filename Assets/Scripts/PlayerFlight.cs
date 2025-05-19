@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,6 +6,11 @@ public class PlayerFlight : MonoBehaviour
 {
     private UIController uiController;
     public bool isFlying = false;
+
+    public void Start()
+    {
+        uiController = FindAnyObjectByType<UIController>();
+    }
 
     public IEnumerator Fly(float duration, float flyHeight) 
     {
