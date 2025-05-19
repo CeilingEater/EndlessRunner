@@ -83,7 +83,7 @@ public class PickUpManager : MonoBehaviour
         GameObject spawnPickup = pickups[Random.Range(0, pickups.Length)]; //spawn random prefab from array
         float randomZ = Random.Range(zPickupMin, zPickupMax); 
         GameObject newPickup = Instantiate(spawnPickup, pickupSpawner.transform.position + new Vector3(0, 2, randomZ), Quaternion.identity);
-
+        newPickup.transform.Rotate(0, 50, 45);
         _instantiatedPickups.Add(newPickup);
 
     }
