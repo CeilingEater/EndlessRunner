@@ -16,57 +16,56 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     
     //Singleton
-    public static GameManager Instance { get; private set; }  //property
-    //static bc it belongs to class
-    //get can be accessed from outside the class, but not set
+    public static GameManager Instance { get; private set; }
 
     private int _score = 0;
-    //private int _winscore = 0;
     private GameObject _player;
     private GameObject[] _pickups;
 
-    void Awake()  //runs before start
+    void Awake()
     {
-        //an instance has already been assigned
-        if (Instance != null)  //if NOT empty
+        if (Instance != null)
         {
-            Destroy(this);   //destroy current instance in favor of pre-existing one
-            return; //exit code
+            Destroy(this);
+            return;
         }
-        
-        Instance = this;  //instance is equal to original instance
-        
-        //my little pony, my little pony,aaaahahahahahahaha my little pony, i used to wonder what friendship could be! (My little pony) And to you all shared its magic with me!
-        //Great adventure, tons of fun! a beautiful heart faithful and strong, sharing kindness, its an easy feat!
-        //and magic makes it all complete!
+        Instance = this;
+    }
+    
+    //increment score event
+    private void OnEnable()
+    {
+        Debug.Log("GameManager OnEnable - subscribing to OnScoreIncremented");
+        GameEvents.OnScoreIncremented += IncrementScore;
+    }
+
+    private void OnDisable()
+    {
+        Debug.Log("GameManager OnDisable - unsubscribing from OnScoreIncremented");
+        GameEvents.OnScoreIncremented -= IncrementScore;
     }
 
     public void IncrementScore(int amount)
     {
-        if (_isGameOver)
-            return;
         
+        if (_isGameOver) return;
+
         _score += amount;
-        uiController.UpdateScoreDisplay(_score);
+        Debug.Log("Incremented score by: " + amount);
+        uiController?.UpdateScoreDisplay(_score);
+        
     }
 
     public void GameOver()
     {
-        /*if (_isGameOver)
-        {
-            return;
-        }*/
         _isGameOver = true;
         Time.timeScale = 0f; //pause game
         uiController.DisplayGameOver(_score);
-        Invoke(nameof(ReturnToMainMenu), 3f);
     }
 
-    private void ReturnToMainMenu()
+    public void PauseGame()
     {
-        //wait 3 secs
-        //return to main menu
-        SceneManager.LoadScene("MainMenu");
+        Time.timeScale = 0f;
     }
     
     // material offset moving
@@ -97,12 +96,13 @@ public class GameManager : MonoBehaviour
         if (material)
         {
             timeOffset += Time.deltaTime * speed;
-
-            // Calculate the offset (example: a scroll animation)
-            Vector2 offset = new Vector2(timeOffset * 0.1f, 0f); // Scroll horizontally
-
-            // Set the material's texture offset
+            
+            Vector2 offset = new Vector2(timeOffset * 0.1f, 0f);
+            
             material.SetTextureOffset("_MainTex", offset);
         }
     }
+    
+   
+    
 }

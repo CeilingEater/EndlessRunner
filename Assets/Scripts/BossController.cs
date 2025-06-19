@@ -30,7 +30,7 @@ public class BossController : MonoBehaviour
         if (bossActive)
         {
             ChargeBoss();
-            Debug.Log("Boss charging");
+            Debug.Log("Boss charg");
         }
         
     }
@@ -39,6 +39,8 @@ public class BossController : MonoBehaviour
     {
         instantiatedBoss = Instantiate(bossPrefab, spawnPoint.position, Quaternion.identity); //spawns boss in specific location
         instantiatedBoss.transform.Rotate(0, 90, 0); //pug didnt hv same rotation as prefab :(
+        
+        GameEvents.RaiseBossSpawned();
     }
     
     private void ChargeBoss()

@@ -26,10 +26,5 @@ public class PlayerDeath : MonoBehaviour
         }
         
     }
-
-    private void ReturnToMainMenu()
-    {
-        //return to main menu
-        SceneManager.LoadScene("MainMenu");
-    }
+    
 }

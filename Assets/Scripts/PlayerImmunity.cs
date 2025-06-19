@@ -23,15 +23,5 @@ public class PlayerImmunity : MonoBehaviour
         uiController?.SetImmuneIcon(false);
         
     }
-
-    /*public bool IsImmune()
-    {
-        return isImmune;
-    }
-
-    public void DisplayImmune()
-    {
-        //uiController..text = "You are immune!";
-        //gameOverTextMesh.gameObject.SetActive(true);
-    }*/
+    
 }

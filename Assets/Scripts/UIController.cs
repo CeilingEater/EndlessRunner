@@ -11,16 +11,21 @@ public class UIController : MonoBehaviour
     [SerializeField] private TextMeshProUGUI FinalScoreTextMesh;
     [SerializeField] private TextMeshProUGUI pickupText;
     [SerializeField] private Button restartButton;
+    [SerializeField] private Button MainMenuButton;
+    [SerializeField] private TextMeshProUGUI GamePauseTextMesh;
     
     public Image flyIcon;
     public Image immuneIcon;
     public Image doubleJumpIcon;
+    private int score = 0;
 
     private void Awake()
     {
         gameOverTextMesh.gameObject.SetActive(false);  
         restartButton.gameObject.SetActive(false);
         FinalScoreTextMesh.gameObject.SetActive(false);
+        MainMenuButton.gameObject.SetActive(false);
+        GamePauseTextMesh.gameObject.SetActive(false);
         
         flyIcon.enabled = false;
         immuneIcon.enabled = false;
@@ -32,6 +37,7 @@ public class UIController : MonoBehaviour
     void Start()
     {
         restartButton.onClick.AddListener(OnRestartButtonClicked);
+        MainMenuButton.onClick.AddListener(OnMainMenuButtonClicked);
     }
     
     private void OnRestartButtonClicked()
@@ -40,16 +46,19 @@ public class UIController : MonoBehaviour
         Time.timeScale = 1f;
     }
     
+    private void OnMainMenuButtonClicked()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+    
     
     public void UpdateScoreDisplay(int score)
     {
-        scoreTextMesh.text = score.ToString("00"); //update displayed score
-    }
-
-    public void DisplayYouWin()
-    {
-        gameOverTextMesh.text = "YOU WIN";
-        gameOverTextMesh.gameObject.SetActive(true);
+        Debug.Log("[UIController] Updating score UI: " + score);
+        if (scoreTextMesh != null)
+            scoreTextMesh.text = score.ToString("00");
+        else
+            Debug.LogError("scoreTextMesh is not assigned in UIController");
     }
 
     public void DisplayGameOver(int score)
@@ -58,6 +67,7 @@ public class UIController : MonoBehaviour
         gameOverTextMesh.gameObject.SetActive(true);
         
         restartButton.gameObject.SetActive(true);
+        MainMenuButton.gameObject.SetActive(true);
         
         FinalScoreTextMesh.text = "Score: " + score;
         FinalScoreTextMesh.gameObject.SetActive(true);
@@ -79,6 +89,30 @@ public class UIController : MonoBehaviour
         doubleJumpIcon.enabled = state;
     }
 
+    private void OnEnable()
+    {
+        GameEvents.OnImmunityPickedUp += EnableImmuneIcon;
+        GameEvents.OnFlightPickedUp += EnableFlyIcon;
+        GameEvents.OnDoubleJumpPickedUp += EnableDoubleJumpIcon;
+        GameEvents.OnScoreIncremented += HandleScoreIncremented;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.OnImmunityPickedUp -= EnableImmuneIcon;
+        GameEvents.OnFlightPickedUp -= EnableFlyIcon;
+        GameEvents.OnDoubleJumpPickedUp -= EnableDoubleJumpIcon;
+        GameEvents.OnScoreIncremented -= HandleScoreIncremented;
+    }
+
+    private void EnableImmuneIcon() => SetImmuneIcon(true);
+    private void EnableFlyIcon() => SetFlyIcon(true);
+    private void EnableDoubleJumpIcon() => SetDoubleJumpIcon(true);
     
+    private void HandleScoreIncremented(int amount)
+    {
+        score += amount;
+        UpdateScoreDisplay(score);
+    }
     
 }

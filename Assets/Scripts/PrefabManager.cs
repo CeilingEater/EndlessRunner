@@ -43,32 +43,19 @@ public class PrefabManager : MonoBehaviour
 
     private void SpawnPrefabs()
     {
-        
-        /*if (obstacles.Length == 0 || player == null) return;
-
-        GameObject spawnPrefab = obstacles[Random.Range(0, obstacles.Length)];
-
-        float randomZ = player.transform.position.z + Random.Range(spawnDistanceMin, spawnDistanceMax);
-        float xOffset = Random.Range(-spawnDistanceMin, spawnDistanceMin);
-
-        Vector3 spawnPosition = new Vector3(player.transform.position.x + xOffset, 0.0f, randomZ);
-        GameObject newObstacle = Instantiate(spawnPrefab, spawnPosition, Quaternion.identity);*/
-        
 
         if (obstacles.Length == 0) return;
         
         GameObject spawnPrefab = obstacles[Random.Range(0, obstacles.Length)]; //spawn random prefab from array
         float randomZ = Random.Range(zPrefabMin, zPrefabMax); //to spawn obstacle randomly in front of player
         
-        float randomYRotation = Random.Range(yRotationMin, yRotationMax); // rotation
+        float randomYRotation = Random.Range(yRotationMin, yRotationMax); // rotation of the prefab s
 
         Quaternion randomRotation = Quaternion.Euler(0f, randomYRotation, 0f);
         
         GameObject newObstacle = Instantiate(spawnPrefab, new Vector3(xPrefabPosition, 0.0f, randomZ), randomRotation); //autofilled LOL i hope its right
 
         instantiatedPrefabs.Add(newObstacle);
-        
-        //Debug.Log("obstacles spawned");
 
     }
 
@@ -84,17 +71,16 @@ public class PrefabManager : MonoBehaviour
                 {
                     Destroy(instantiatedPrefabs[i]);
                     instantiatedPrefabs.RemoveAt(i);
-                    //Debug.Log("obstacles deleted");
                     obstaclesDestroyed++; //increment for each counter
                 }          
             }
         }
         
-        
-        
         if (obstaclesDestroyed > 0)
         {
-            GameManager.Instance.IncrementScore(obstaclesDestroyed);
+            //GameManager.Instance.IncrementScore(obstaclesDestroyed);
+            GameEvents.RaiseScoreIncremented(obstaclesDestroyed);
+            Debug.Log ("increased score with: " + obstaclesDestroyed);
         }
     }
 }

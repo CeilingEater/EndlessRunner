@@ -32,6 +32,7 @@ public class PickUpManager : MonoBehaviour
         DeletePickups();
     }
     
+    
     private void OnTriggerEnter(Collider other) //detect player collision when they touch a pickup
     {
         if (!other.CompareTag("Player"))
@@ -46,7 +47,7 @@ public class PickUpManager : MonoBehaviour
             if (playerImmunity != null)
             {
                 playerImmunity.StartCoroutine(playerImmunity.ActivateImmunity(5f)); //5 second immunity
-                uiController.SetImmuneIcon(true);
+                GameEvents.RaiseImmunity();
             }
         }
         
@@ -57,7 +58,7 @@ public class PickUpManager : MonoBehaviour
             if (controller != null)
             {
                 controller.ActivateFlight(5f, 8f);
-                uiController.SetFlyIcon(true);
+                GameEvents.RaiseFlight();
             }
             
         }
@@ -68,7 +69,7 @@ public class PickUpManager : MonoBehaviour
             if (playerDoubleJump != null)
             {
                 playerDoubleJump.StartCoroutine(playerDoubleJump.ActivateDoubleJump(5f));
-                uiController.SetDoubleJumpIcon(true);
+                GameEvents.RaiseDoubleJump();
             }
         }
 

@@ -15,13 +15,13 @@ public class PlayerDoubleJump : MonoBehaviour
     public IEnumerator ActivateDoubleJump(float duration)
     {
         hasDoubleJump = true;
-        Debug.Log("double jump activated");
+        Debug.Log("double jump");
         uiController?.SetDoubleJumpIcon(true);
         
         yield return new WaitForSeconds(duration);
         
         hasDoubleJump = false;
-        Debug.Log("double jump deactivated");
+        Debug.Log("double jump stopped");
         uiController?.SetDoubleJumpIcon(false);
     }
 }
