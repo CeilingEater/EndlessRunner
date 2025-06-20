@@ -17,6 +17,7 @@ public class UIController : MonoBehaviour
     public Image flyIcon;
     public Image immuneIcon;
     public Image doubleJumpIcon;
+    public GameObject pausePanel;
     private int score = 0;
 
     private void Awake()
@@ -25,7 +26,8 @@ public class UIController : MonoBehaviour
         restartButton.gameObject.SetActive(false);
         FinalScoreTextMesh.gameObject.SetActive(false);
         MainMenuButton.gameObject.SetActive(false);
-        GamePauseTextMesh.gameObject.SetActive(false);
+        pausePanel.SetActive(false);
+        
         
         flyIcon.enabled = false;
         immuneIcon.enabled = false;
@@ -42,7 +44,7 @@ public class UIController : MonoBehaviour
     
     private void OnRestartButtonClicked()
     {
-        SceneManager.LoadScene("LevelStomp");
+        SceneManager.LoadScene("Level1");
         Time.timeScale = 1f;
     }
     
@@ -50,15 +52,19 @@ public class UIController : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
     }
-    
+
+    public void PauseMenuVisible(bool state)
+    {
+        if (pausePanel != null)
+            pausePanel.SetActive(state);
+    }
     
     public void UpdateScoreDisplay(int score)
     {
-        Debug.Log("[UIController] Updating score UI: " + score);
         if (scoreTextMesh != null)
             scoreTextMesh.text = score.ToString("00");
         else
-            Debug.LogError("scoreTextMesh is not assigned in UIController");
+            Debug.LogError("not assigned");
     }
 
     public void DisplayGameOver(int score)

@@ -30,7 +30,6 @@ public class BossController : MonoBehaviour
         if (bossActive)
         {
             ChargeBoss();
-            Debug.Log("Boss charg");
         }
         
     }

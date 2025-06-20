@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,7 +12,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Renderer playerRenderer;  //added
     [SerializeField] private TextMeshProUGUI gameOverTextMesh;
     private readonly List<Renderer> _pickupRenderers = new List<Renderer>();
+    
     bool _isGameOver;
+    private bool _isPaused = false;
+    
+    //for level switching
+    private int _currentLevel = 1;
+    private int _scoreThreshold = 20;
+    private bool _hasSwitchedLevels = false;
     
     public GameObject player;
     
@@ -30,30 +38,41 @@ public class GameManager : MonoBehaviour
             return;
         }
         Instance = this;
+        DontDestroyOnLoad(gameObject);
+    }
+    
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            PauseGame();
+        }
     }
     
     //increment score event
     private void OnEnable()
     {
-        Debug.Log("GameManager OnEnable - subscribing to OnScoreIncremented");
         GameEvents.OnScoreIncremented += IncrementScore;
+        SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
     {
-        Debug.Log("GameManager OnDisable - unsubscribing from OnScoreIncremented");
         GameEvents.OnScoreIncremented -= IncrementScore;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
     public void IncrementScore(int amount)
     {
-        
         if (_isGameOver) return;
 
         _score += amount;
-        Debug.Log("Incremented score by: " + amount);
         uiController?.UpdateScoreDisplay(_score);
-        
+
+        if (_score >= _scoreThreshold && !_hasSwitchedLevels)
+        {
+            SwitchLevel(); //if reach score threshold and havent switched yet
+        }
     }
 
     public void GameOver()
@@ -65,44 +84,38 @@ public class GameManager : MonoBehaviour
 
     public void PauseGame()
     {
-        Time.timeScale = 0f;
+        _isPaused = !_isPaused;
+        Time.timeScale = _isPaused ? 0f : 1f;
+        
+        uiController?.PauseMenuVisible(_isPaused);
     }
     
-    // material offset moving
-
-    public Material material;
-    public float speed = 30f;
-
-    private float timeOffset;
-
-    private void Start()
+    // level switching
+    private void SwitchLevel()
     {
-        if (!material)
-        {
-            Renderer renderer = GetComponent<Renderer>();
-            if (renderer != null && renderer.material != null)
-            {
-                material = renderer.material;
-            }
-            else
-            {
-                enabled = false;
-            }
-        }
-    }
+        _hasSwitchedLevels = true;
+        _scoreThreshold += 20;
 
-    private void Update()
-    {
-        if (material)
+        string nextScene = "";
+
+        if (_currentLevel == 1)
         {
-            timeOffset += Time.deltaTime * speed;
-            
-            Vector2 offset = new Vector2(timeOffset * 0.1f, 0f);
-            
-            material.SetTextureOffset("_MainTex", offset);
+            nextScene = "Level2";
+            _currentLevel = 2;
         }
+        else
+        {
+            _currentLevel = Random.Range(1, 3); // 1 or 2
+            nextScene = _currentLevel == 1 ? "Level1" : "Level2";
+        }
+
+        Debug.Log("Loading scene: " + nextScene);
+        SceneManager.LoadScene(nextScene);
     }
     
-   
     
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        uiController = FindFirstObjectByType<UIController>(); // for ui not working when scene switch
+    }
 }

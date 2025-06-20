@@ -14,7 +14,7 @@ public class MainMenuController : MonoBehaviour
 
     private void OnStartButtonClicked()
     {
-        SceneManager.LoadScene("LevelStomp");
+        SceneManager.LoadScene("Level1");
     }
     
     private void OnQuitButtonClicked()

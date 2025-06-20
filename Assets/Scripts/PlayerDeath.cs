@@ -15,11 +15,9 @@ public class PlayerDeath : MonoBehaviour
             PlayerImmunity immunity = player.GetComponent<PlayerImmunity>();
             if (immunity != null && immunity.isImmune)
             {
-                Debug.Log("immune so dont die");
                 return;
             }
-
-            Debug.Log("not immune so die");
+            
             Destroy(player);
             GameManager.Instance.GameOver();
             return;

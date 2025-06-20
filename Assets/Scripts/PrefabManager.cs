@@ -80,7 +80,6 @@ public class PrefabManager : MonoBehaviour
         {
             //GameManager.Instance.IncrementScore(obstaclesDestroyed);
             GameEvents.RaiseScoreIncremented(obstaclesDestroyed);
-            Debug.Log ("increased score with: " + obstaclesDestroyed);
         }
     }
 }

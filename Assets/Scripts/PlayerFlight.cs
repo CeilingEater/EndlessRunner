@@ -31,7 +31,6 @@ public class PlayerFlight : MonoBehaviour
             
             rb.linearVelocity = Vector3.zero; // stop movement
         }
-        Debug.Log("fly");
 
         yield return new WaitForSeconds(duration);
         
@@ -45,7 +44,6 @@ public class PlayerFlight : MonoBehaviour
         
         transform.position = new Vector3(transform.position.x, originalPosition.y, transform.position.z);
         isFlying = false;
-
-        Debug.Log("stop fly");
+        
     }
 }

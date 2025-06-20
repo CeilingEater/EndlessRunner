@@ -9,7 +9,6 @@ public class GameEvents : MonoBehaviour
 
        public static void RaiseScoreIncremented(int amount)
        {
-              Debug.Log($"RaiseScoreIncremented called with amount: {amount}");
               OnScoreIncremented?.Invoke(amount);
        }
        // pickups
