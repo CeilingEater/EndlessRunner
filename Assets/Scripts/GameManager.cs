@@ -15,11 +15,16 @@ public class GameManager : MonoBehaviour
     
     bool _isGameOver;
     private bool _isPaused = false;
+    public Material material;
     
     //for level switching
     private int _currentLevel = 1;
     private int _scoreThreshold = 20;
     private bool _hasSwitchedLevels = false;
+    //private int _nextLevelSwitchScore = 20;
+    private bool _hasFinishedFirstCycle = false;
+    
+    private int _levelsBeaten = 0;
     
     public GameObject player;
     
@@ -40,6 +45,11 @@ public class GameManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
+
+    private void Start()
+    {
+        _hasSwitchedLevels = false;
+    }
     
     void Update()
     {
@@ -49,15 +59,16 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    //increment score event
     private void OnEnable()
     {
+        GameEvents.OnLevelBeaten += UpdateLevelsBeaten;
         GameEvents.OnScoreIncremented += IncrementScore;
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
     private void OnDisable()
     {
+        GameEvents.OnLevelBeaten -= UpdateLevelsBeaten;
         GameEvents.OnScoreIncremented -= IncrementScore;
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
@@ -69,9 +80,10 @@ public class GameManager : MonoBehaviour
         _score += amount;
         uiController?.UpdateScoreDisplay(_score);
 
+        // Check if it's time to switch levels
         if (_score >= _scoreThreshold && !_hasSwitchedLevels)
         {
-            SwitchLevel(); //if reach score threshold and havent switched yet
+            SwitchLevel(); // Call your clean method
         }
     }
 
@@ -93,29 +105,51 @@ public class GameManager : MonoBehaviour
     // level switching
     private void SwitchLevel()
     {
-        _hasSwitchedLevels = true;
-        _scoreThreshold += 20;
+        _hasSwitchedLevels = true;               // Prevent multiple triggers for the same threshold
+        _scoreThreshold += 20;                   // Set the next threshold
+        string nextScene;
 
-        string nextScene = "";
-
-        if (_currentLevel == 1)
+        if (!_hasFinishedFirstCycle)
         {
-            nextScene = "Level2";
+            // First time switching: always go to Level2
+            _hasFinishedFirstCycle = true;
             _currentLevel = 2;
+            nextScene = "Level2";
         }
         else
         {
-            _currentLevel = Random.Range(1, 3); // 1 or 2
+            // Randomly choose between Level1 and Level2
+            _currentLevel = Random.Range(1, 3);   // 1 or 2
             nextScene = _currentLevel == 1 ? "Level1" : "Level2";
         }
 
-        Debug.Log("Loading scene: " + nextScene);
+        Debug.Log("Switching to: " + nextScene);
         SceneManager.LoadScene(nextScene);
+
+        _levelsBeaten++;
+        GameEvents.RaiseLevelBeaten(_levelsBeaten);
+        
     }
-    
     
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        uiController = FindFirstObjectByType<UIController>(); // for ui not working when scene switch
+        uiController = FindFirstObjectByType<UIController>();
+
+        if (uiController != null)
+        {
+            uiController.UpdateScoreDisplay(_score);
+            uiController.UpdateLevelsBeaten(_levelsBeaten);
+        }
+        
+        _hasSwitchedLevels = false;
+    }
+    
+    // levels beaten
+
+    private void UpdateLevelsBeaten(int newValue)
+    {
+        _levelsBeaten = newValue;
+        uiController?.UpdateLevelsBeaten(_levelsBeaten);
+        Debug.Log("updated levels beaten");
     }
 }

@@ -28,5 +28,12 @@ public class GameEvents : MonoBehaviour
               OnBossSpawned?.Invoke();
        }
        
-       
+       // levels beaten
+
+       public static event Action<int> OnLevelBeaten;
+
+       public static void RaiseLevelBeaten(int totalBeaten)
+       {
+              OnLevelBeaten?.Invoke(totalBeaten);
+       }
 }

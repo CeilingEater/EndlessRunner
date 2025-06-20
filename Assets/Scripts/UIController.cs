@@ -13,6 +13,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private Button restartButton;
     [SerializeField] private Button MainMenuButton;
     [SerializeField] private TextMeshProUGUI GamePauseTextMesh;
+    [SerializeField] private TextMeshProUGUI LevelsBeatenTextMesh;
     
     public Image flyIcon;
     public Image immuneIcon;
@@ -97,6 +98,7 @@ public class UIController : MonoBehaviour
 
     private void OnEnable()
     {
+        GameEvents.OnLevelBeaten += UpdateLevelsBeaten;
         GameEvents.OnImmunityPickedUp += EnableImmuneIcon;
         GameEvents.OnFlightPickedUp += EnableFlyIcon;
         GameEvents.OnDoubleJumpPickedUp += EnableDoubleJumpIcon;
@@ -105,6 +107,7 @@ public class UIController : MonoBehaviour
 
     private void OnDisable()
     {
+        GameEvents.OnLevelBeaten -= UpdateLevelsBeaten;
         GameEvents.OnImmunityPickedUp -= EnableImmuneIcon;
         GameEvents.OnFlightPickedUp -= EnableFlyIcon;
         GameEvents.OnDoubleJumpPickedUp -= EnableDoubleJumpIcon;
@@ -119,6 +122,16 @@ public class UIController : MonoBehaviour
     {
         score += amount;
         UpdateScoreDisplay(score);
+    }
+    
+    //track levels beaten
+
+    public void UpdateLevelsBeaten(int levelsBeaten)
+    {
+        if (LevelsBeatenTextMesh != null)
+            LevelsBeatenTextMesh.text = "Level: " + levelsBeaten;
+        else
+            Debug.LogError("LevelsBeatenText not assigned in inspector!");
     }
     
 }
