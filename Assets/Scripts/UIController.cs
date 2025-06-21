@@ -19,7 +19,7 @@ public class UIController : MonoBehaviour
     public Image immuneIcon;
     public Image doubleJumpIcon;
     public GameObject pausePanel;
-    private int score = 0;
+    //private int score = 0;
 
     private void Awake()
     {
@@ -67,6 +67,7 @@ public class UIController : MonoBehaviour
         else
             Debug.LogError("not assigned");
     }
+    
 
     public void DisplayGameOver(int score)
     {
@@ -120,8 +121,10 @@ public class UIController : MonoBehaviour
     
     private void HandleScoreIncremented(int amount)
     {
-        score += amount;
-        UpdateScoreDisplay(score);
+        if (GameManager.Instance != null)
+        {
+            UpdateScoreDisplay(GameManager.Instance.CurrentScore); // Add a public getter in GameManager
+        }
     }
     
     //track levels beaten

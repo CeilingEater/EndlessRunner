@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -21,9 +22,8 @@ public class GameManager : MonoBehaviour
     private int _currentLevel = 1;
     private int _scoreThreshold = 20;
     private bool _hasSwitchedLevels = false;
-    //private int _nextLevelSwitchScore = 20;
     private bool _hasFinishedFirstCycle = false;
-    
+    public int CurrentScore => _score;
     private int _levelsBeaten = 0;
     
     public GameObject player;
@@ -31,7 +31,7 @@ public class GameManager : MonoBehaviour
     //Singleton
     public static GameManager Instance { get; private set; }
 
-    private int _score = 0;
+    private int _score;
     private GameObject _player;
     private GameObject[] _pickups;
 
@@ -39,9 +39,12 @@ public class GameManager : MonoBehaviour
     {
         if (Instance != null)
         {
+            Debug.LogWarning("Extra GameManager instance detected and destroyed!");
             Destroy(this);
             return;
         }
+        
+        Debug.Log("GameManager initialized");
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
@@ -79,11 +82,10 @@ public class GameManager : MonoBehaviour
 
         _score += amount;
         uiController?.UpdateScoreDisplay(_score);
-
-        // Check if it's time to switch levels
+        
         if (_score >= _scoreThreshold && !_hasSwitchedLevels)
         {
-            SwitchLevel(); // Call your clean method
+            SwitchLevel();
         }
     }
 
@@ -105,20 +107,20 @@ public class GameManager : MonoBehaviour
     // level switching
     private void SwitchLevel()
     {
-        _hasSwitchedLevels = true;               // Prevent multiple triggers for the same threshold
-        _scoreThreshold += 20;                   // Set the next threshold
+        _hasSwitchedLevels = true;
+        _scoreThreshold += 20;
         string nextScene;
 
         if (!_hasFinishedFirstCycle)
         {
-            // First time switching: always go to Level2
+            // First time switchin always go to level2
             _hasFinishedFirstCycle = true;
             _currentLevel = 2;
             nextScene = "Level2";
         }
         else
         {
-            // Randomly choose between Level1 and Level2
+            
             _currentLevel = Random.Range(1, 3);   // 1 or 2
             nextScene = _currentLevel == 1 ? "Level1" : "Level2";
         }
@@ -133,14 +135,31 @@ public class GameManager : MonoBehaviour
     
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        uiController = FindFirstObjectByType<UIController>();
+        StartCoroutine(AssignSceneReferencesAfterDelay());
+    }
+    
+    private IEnumerator AssignSceneReferencesAfterDelay() // delay after scene initialises
+    {
+        yield return null; // wait 
 
-        if (uiController != null)
+        uiController = FindFirstObjectByType<UIController>();
+        if (uiController == null)
+        {
+            Debug.LogError("no ui controller or in main menu");
+        }
+        else
         {
             uiController.UpdateScoreDisplay(_score);
             uiController.UpdateLevelsBeaten(_levelsBeaten);
         }
-        
+
+        GameObject foundPlayer = GameObject.FindWithTag("Player");
+        if (foundPlayer != null)
+        {
+            player = foundPlayer;
+            playerRenderer = player.GetComponent<Renderer>();
+        }
+
         _hasSwitchedLevels = false;
     }
     
