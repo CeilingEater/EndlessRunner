@@ -19,11 +19,11 @@ public class MainMenuController : MonoBehaviour
     
     private void OnQuitButtonClicked()
     {
-       
+       Application.Quit();
     }
     
     private void leaderboardButtonClicked()
     {
-       
+       SceneManager.LoadScene("Leaderboard");
     }
 }
