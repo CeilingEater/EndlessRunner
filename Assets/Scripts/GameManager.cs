@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     
     //for level switching
     private int _currentLevel = 1;
-    private int _scoreThreshold = 20;
+    private int _scoreThreshold = 30;
     private bool _hasSwitchedLevels = false;
     private bool _hasFinishedFirstCycle = false;
     public int CurrentScore => _score;
@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
         _isGameOver = false;
         _hasSwitchedLevels = false;
         _hasFinishedFirstCycle = false;
-        _scoreThreshold = 20;
+        _scoreThreshold = 30;
         _currentLevel = 1;
         _levelsBeaten = 0;
 
@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
     private void SwitchLevel()
     {
         _hasSwitchedLevels = true;
-        _scoreThreshold += 20;
+        _scoreThreshold += 30;
         string nextScene;
 
         if (!_hasFinishedFirstCycle)
