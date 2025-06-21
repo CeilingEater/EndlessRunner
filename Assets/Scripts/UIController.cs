@@ -45,6 +45,7 @@ public class UIController : MonoBehaviour
     
     private void OnRestartButtonClicked()
     {
+        GameManager.Instance?.ResetGameState();
         SceneManager.LoadScene("Level1");
         Time.timeScale = 1f;
     }

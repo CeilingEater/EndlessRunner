@@ -104,6 +104,20 @@ public class GameManager : MonoBehaviour
         uiController?.PauseMenuVisible(_isPaused);
     }
     
+    public void ResetGameState()
+    {
+        _score = 0;
+        _isGameOver = false;
+        _hasSwitchedLevels = false;
+        _hasFinishedFirstCycle = false;
+        _scoreThreshold = 20;
+        _currentLevel = 1;
+        _levelsBeaten = 0;
+
+        uiController?.UpdateScoreDisplay(_score);
+        uiController?.UpdateLevelsBeaten(_levelsBeaten);
+    }
+    
     // level switching
     private void SwitchLevel()
     {
