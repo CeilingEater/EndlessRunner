@@ -7,7 +7,7 @@ using Object = UnityEngine.Object;
 
 public class DatabaseManager : MonoBehaviour
 {
-    public delegate void DatabaseUpdateDelegate();
+    /*public delegate void DatabaseUpdateDelegate();
     public static event DatabaseUpdateDelegate OnDatabaseUpdate;
     
     public static DatabaseManager instance { get; private set; }
@@ -76,5 +76,5 @@ public class DatabaseManager : MonoBehaviour
             Debug.Log("Object added to database");
             callback(www.downloadHandler.text);
         }
-    }
+    }*/
 }
