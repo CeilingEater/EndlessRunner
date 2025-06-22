@@ -1,80 +1,64 @@
-using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.Serialization;
-using Object = UnityEngine.Object;
+using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class DatabaseManager : MonoBehaviour
 {
-    /*public delegate void DatabaseUpdateDelegate();
-    public static event DatabaseUpdateDelegate OnDatabaseUpdate;
-    
-    public static DatabaseManager instance { get; private set; }
+    public static DatabaseManager Instance { get; private set; }
 
     private void Awake()
     {
-        if (instance != null)
+        if (Instance == null)
         {
-            Destroy(this);
-            return;
-        }
-        
-        instance = this;
-    }
-
-    public void Post(string endpoint, string json)
-    {
-        StartCoroutine(PostData(endpoint, json));
-    }
-
-    private IEnumerator PostData(string endpoint, string json)
-    {
-        string URL = GameManager.instance.DatabaseURL + endpoint;
-        UnityWebRequest www = new UnityWebRequest(URL, "POST");
-        
-        byte[] body = System.Text.Encoding.UTF8.GetBytes(json);
-        www.uploadHandler = new UploadHandlerRaw(body);
-        www.downloadHandler = new DownloadHandlerBuffer();
-        www.SetRequestHeader("Content-Type", "application/json");
-        
-        yield return www.SendWebRequest();
-
-        if (www.result == UnityWebRequest.Result.ConnectionError ||
-            www.result == UnityWebRequest.Result.ProtocolError)
-        {
-            Debug.Log(www.error);
+            Instance = this;
+            DontDestroyOnLoad(gameObject); 
         }
         else
         {
-            Debug.Log("Object added to database");
-            Debug.Log(www.downloadHandler.text);
-            OnDatabaseUpdate?.Invoke();
+            Destroy(gameObject);
         }
     }
 
-    public void Get(string endpoint, Action<string> callback = null)
+    public void SubmitScore(string playerName, int score)
     {
-        StartCoroutine(GetData(endpoint, callback));
+        StartCoroutine(SubmitScoreCoroutine(playerName, score));
     }
 
-    private IEnumerator GetData(string endpoint, Action<string> callback)
+    private IEnumerator SubmitScoreCoroutine(string name, int score)
     {
-        string URL = GameManager.instance.DatabaseURL + endpoint;
-        UnityWebRequest www =  UnityWebRequest.Get(URL);
-        
-        yield return www.SendWebRequest();
+        ScoreData data = new ScoreData(name, score);
+        string json = JsonUtility.ToJson(data);
 
-        if (www.result == UnityWebRequest.Result.ConnectionError ||
-            www.result == UnityWebRequest.Result.ProtocolError)
+        UnityWebRequest request = new UnityWebRequest("http://localhost:3000/leaderboard", "POST");
+        byte[] bodyRaw = new System.Text.UTF8Encoding().GetBytes(json);
+        request.uploadHandler = new UploadHandlerRaw(bodyRaw);
+        request.downloadHandler = new DownloadHandlerBuffer();
+        request.SetRequestHeader("Content-Type", "application/json");
+
+        yield return request.SendWebRequest();
+
+        if (request.result == UnityWebRequest.Result.Success)
         {
-            Debug.Log(www.error);
-            callback(null);
+            Debug.Log("Score submitted!");
+            SceneManager.LoadScene("Leaderboard");
         }
         else
         {
-            Debug.Log("Object added to database");
-            callback(www.downloadHandler.text);
+            Debug.LogError("Failed to submit score: " + request.error);
         }
-    }*/
+    }
+
+    [System.Serializable]
+    private class ScoreData
+    {
+        public string playerName;
+        public int score;
+
+        public ScoreData(string playerName, int score)
+        {
+            this.playerName = playerName;
+            this.score = score;
+        }
+    }
 }

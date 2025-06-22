@@ -20,6 +20,11 @@ public class PlayerDeath : MonoBehaviour
             
             Destroy(player);
             GameManager.Instance.GameOver();
+            
+            //adding to leaderboard after death
+            string playerName = PlayerPrefs.GetString("PlayerName", "Unknown");
+            //int score = _score; //im gonna brown
+            //DatabaseManager.Instance.SubmitScore(playerName, score);
             return;
         }
         
