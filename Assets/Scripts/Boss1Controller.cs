@@ -23,7 +23,10 @@ public class BossController : MonoBehaviour
         if (!bossActive && timeElapsed >= levelDuration / 2f)
         {
             SpawnBoss();
-            Debug.Log("Boss spawned");
+            if (MusicManager.Instance != null)
+            {
+                MusicManager.Instance.PlayBossMusic();
+            }
             bossActive = true;
         }
 

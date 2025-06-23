@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    //sounds
+    public AudioClip jumpSound;
+    public AudioClip deathSound;
+    private AudioSource audioSource;
+    
     //[SerializeField] private int health = 5;
     [SerializeField] private float moveSpeed = 7f;
     [SerializeField] private float jumpSpeed = 30f;
@@ -28,6 +33,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        audioSource = GetComponent<AudioSource>();
         _rigidbody = GetComponent<Rigidbody>(); //dont interact in update
         playerFlight = GetComponent<PlayerFlight>();
         _playerDoubleJump = GetComponent<PlayerDoubleJump>();
@@ -49,6 +55,7 @@ public class PlayerController : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            audioSource.PlayOneShot(jumpSound);
             if (IsGrounded())
             {
                 _jumpRequest = true;

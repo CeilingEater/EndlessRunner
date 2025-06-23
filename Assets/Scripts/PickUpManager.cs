@@ -5,6 +5,10 @@ using UnityEngine.Serialization;
 
 public class PickUpManager : MonoBehaviour
 {
+    //sounds
+    [SerializeField] private AudioClip collectSound; 
+    private AudioSource audioSource;
+    
     [SerializeField] private float pickupMoveSpeed = 30f;
     [SerializeField] private float zPickupMin = -5f, zPickupMax = 5f;
     
@@ -19,7 +23,11 @@ public class PickUpManager : MonoBehaviour
     public GameObject pickupEnd;
 
     public static bool IsPickupDestroyed;
-    
+
+    void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
     void Start()
     {
         InvokeRepeating(nameof(SpawnPickups), 1.0f, 3f);  //spawns prefabs in intervals
@@ -37,6 +45,18 @@ public class PickUpManager : MonoBehaviour
     {
         if (!other.CompareTag("Player"))
             return;
+        
+        if (!CompareTag("ImmunePickup") && !CompareTag("FlyPickup") && !CompareTag("DoubleJumpPickup"))
+            return;
+        
+        if (collectSound != null)
+        {
+            if (audioSource != null)
+                audioSource.PlayOneShot(collectSound);
+            else
+                AudioSource.PlayClipAtPoint(collectSound, transform.position);
+        }
+        
         
         if (uiController == null)
             uiController = FindAnyObjectByType<UIController>();
@@ -73,7 +93,7 @@ public class PickUpManager : MonoBehaviour
             }
         }
 
-        Destroy(gameObject);
+        Destroy(gameObject, collectSound != null ? collectSound.length : 0f);
     }
     
     private void SpawnPickups()

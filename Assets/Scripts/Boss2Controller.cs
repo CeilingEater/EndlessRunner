@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,12 +13,12 @@ public class Boss2 : MonoBehaviour
     public GameObject shockwavePrefab;
     public Transform shockwaveSpawnPoint;
     public float delayBeforeFirstAttack = 2f;
-    public float delayBetweenShockwaves = 1.5f;
-    public float shockwaveSpeed = 10f;
+    public float delayBetweenShockwaves = 5f;
+    public float shockwaveSpeed = 25f;
     public int totalShockwaves = 3;
 
     //move up down
-    public float floatHeight = 0.5f;
+    public float floatHeight = 5f;
     public float floatSpeed = 2f;
     public float levelDuration = 50f;
 
@@ -41,6 +42,10 @@ public class Boss2 : MonoBehaviour
         if (!bossSpawned && levelTimer >= levelDuration / 2f)
         {
             SpawnBoss();
+            if (MusicManager.Instance != null)
+            {
+                MusicManager.Instance.PlayBossMusic();
+            }
         }
 
 
@@ -75,9 +80,13 @@ public class Boss2 : MonoBehaviour
                     instantiatedBoss = null;
                 }
             }
-
-            MoveShockwaves();
+            
         }
+    }
+
+    private void FixedUpdate()
+    {
+        MoveShockwaves();
     }
 
     private void SpawnBoss()
@@ -101,7 +110,7 @@ public class Boss2 : MonoBehaviour
     {
         GameObject wave = Instantiate(shockwavePrefab, shockwaveSpawnPoint.position, Quaternion.identity);
         activeShockwaves.Add(wave);
-        Destroy(wave, 15f);
+        Destroy(wave, 10f);
     }
 
     private void MoveShockwaves()
@@ -112,8 +121,7 @@ public class Boss2 : MonoBehaviour
             
             if (wave != null)
             {
-                wave.transform.position += Vector3.right * (shockwaveSpeed * Time.fixedDeltaTime);
-                Debug.Log($"Moving {activeShockwaves.Count} shockwaves");
+                wave.transform.position += Vector3.right * shockwaveSpeed * Time.fixedDeltaTime;
 
                 if (wave.transform.position.x < -100f)
                 {
@@ -127,23 +135,5 @@ public class Boss2 : MonoBehaviour
             }
         }
     }
-
-    /*private void SendShockwave()
-    {
-        GameObject wave = Instantiate(shockwavePrefab, shockwaveSpawnPoint.position, Quaternion.identity);
-        Rigidbody rb = wave.GetComponent<Rigidbody>();
-
-        if (rb != null)
-        {
-            rb.useGravity = false;
-            rb.linearVelocity = Vector3.left * shockwaveSpeed; // assuming player is on the left
-            Debug.Log("Shockwave velocity: " + rb.linearVelocity);
-        }
-        else
-        {
-            Debug.LogError("Shockwave prefab missing Rigidbody!");
-        }
-
-        Destroy(wave, 5f);
-    }*/
+    
 }

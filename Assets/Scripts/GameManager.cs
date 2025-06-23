@@ -9,6 +9,10 @@ using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
 {
+    //sounds
+    public AudioClip deathSound;
+    private AudioSource audioSource;
+    
     [SerializeField] private UIController uiController;
     [SerializeField] private Renderer playerRenderer;  //added
     [SerializeField] private TextMeshProUGUI gameOverTextMesh;
@@ -38,6 +42,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        audioSource = GetComponent<AudioSource>();
         if (Instance != null)
         {
             Destroy(this);
@@ -93,6 +98,8 @@ public class GameManager : MonoBehaviour
         _isGameOver = true;
         Time.timeScale = 0f; //pause game
         uiController.DisplayGameOver(_score);
+        if (deathSound != null && audioSource != null)
+            audioSource.PlayOneShot(deathSound);
     }
 
     public void PauseGame()
@@ -126,14 +133,13 @@ public class GameManager : MonoBehaviour
 
         if (!_hasFinishedFirstCycle)
         {
-            // First time switchin always go to level2
+            //first time switchin always go to level2
             _hasFinishedFirstCycle = true;
             _currentLevel = 2;
             nextScene = "Level2";
         }
         else
         {
-            
             _currentLevel = Random.Range(1, 3);   // 1 or 2
             nextScene = _currentLevel == 1 ? "Level1" : "Level2";
         }
