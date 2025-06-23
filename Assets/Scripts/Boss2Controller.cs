@@ -50,7 +50,6 @@ public class Boss2 : MonoBehaviour
 
             if (!attackStarted)
             {
-                // Wait before starting shockwave attacks
                 attackDelayTimer += Time.deltaTime;
                 if (attackDelayTimer >= delayBeforeFirstAttack)
                 {
@@ -60,7 +59,7 @@ public class Boss2 : MonoBehaviour
             }
             else
             {
-                // Send shockwaves at intervals
+                
                 shockwaveDelayTimer += Time.deltaTime;
 
                 if (shockwavesSent < totalShockwaves && shockwaveDelayTimer >= delayBetweenShockwaves)
@@ -83,7 +82,7 @@ public class Boss2 : MonoBehaviour
 
     private void SpawnBoss()
     {
-        bossSpawned = true; // Prevent more spawns
+        bossSpawned = true;
         instantiatedBoss = Instantiate(bossPrefab, spawnPoint.position, Quaternion.identity);
         instantiatedBoss.transform.Rotate(0, 90, 0);
         bossStartPos = instantiatedBoss.transform.position;
@@ -102,6 +101,7 @@ public class Boss2 : MonoBehaviour
     {
         GameObject wave = Instantiate(shockwavePrefab, shockwaveSpawnPoint.position, Quaternion.identity);
         activeShockwaves.Add(wave);
+        Destroy(wave, 15f);
     }
 
     private void MoveShockwaves()
@@ -109,9 +109,17 @@ public class Boss2 : MonoBehaviour
         for (int i = activeShockwaves.Count - 1; i >= 0; i--)
         {
             GameObject wave = activeShockwaves[i];
+            
             if (wave != null)
             {
                 wave.transform.position += Vector3.right * (shockwaveSpeed * Time.fixedDeltaTime);
+                Debug.Log($"Moving {activeShockwaves.Count} shockwaves");
+
+                if (wave.transform.position.x < -100f)
+                {
+                    Destroy(wave);
+                    activeShockwaves.RemoveAt(i);
+                }
             }
             else
             {

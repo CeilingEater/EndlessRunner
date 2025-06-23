@@ -39,12 +39,10 @@ public class GameManager : MonoBehaviour
     {
         if (Instance != null)
         {
-            Debug.LogWarning("Extra GameManager instance detected and destroyed!");
             Destroy(this);
             return;
         }
         
-        Debug.Log("GameManager initialized");
         Instance = this;
         DontDestroyOnLoad(gameObject);
     }
