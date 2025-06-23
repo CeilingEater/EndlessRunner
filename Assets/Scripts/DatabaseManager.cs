@@ -9,19 +9,19 @@ public class DatabaseManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
+        if (Instance != null)
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject); 
+            Destroy(this);
+            return;
         }
-        else
-        {
-            Destroy(gameObject);
-        }
+        
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     public void SubmitScore(string playerName, int score)
     {
+        Debug.Log($"Attempting to submit: {playerName} - {score}");
         StartCoroutine(SubmitScoreCoroutine(playerName, score));
     }
 
@@ -30,17 +30,21 @@ public class DatabaseManager : MonoBehaviour
         ScoreData data = new ScoreData(name, score);
         string json = JsonUtility.ToJson(data);
 
-        UnityWebRequest request = new UnityWebRequest("http://localhost:3000/leaderboard", "POST");
+        UnityWebRequest request = new UnityWebRequest("http://localhost:3000/leaderboards", "POST");
         byte[] bodyRaw = new System.Text.UTF8Encoding().GetBytes(json);
         request.uploadHandler = new UploadHandlerRaw(bodyRaw);
         request.downloadHandler = new DownloadHandlerBuffer();
         request.SetRequestHeader("Content-Type", "application/json");
+        
+        
+        Debug.Log($"Submitting score: {name} - {score}"); //pls work
 
         yield return request.SendWebRequest();
 
         if (request.result == UnityWebRequest.Result.Success)
         {
             Debug.Log("Score submitted!");
+            //loading after added to database
             SceneManager.LoadScene("Leaderboard");
         }
         else

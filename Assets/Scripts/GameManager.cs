@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     
     //Singleton
     public static GameManager Instance { get; private set; }
+    public UIController UIController => uiController;
 
     private int _score;
     private GameObject _player;
@@ -182,5 +183,13 @@ public class GameManager : MonoBehaviour
         _levelsBeaten = newValue;
         uiController?.UpdateLevelsBeaten(_levelsBeaten);
         Debug.Log("updated levels beaten");
+    }
+    
+    //reloading ui
+    public void RegisterUI(UIController newUIController)
+    {
+        uiController = newUIController;
+        Debug.Log("UIController registered.");
+        Debug.Log("Welcome back to the Main Menu!");
     }
 }

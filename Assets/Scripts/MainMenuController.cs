@@ -12,15 +12,15 @@ public class MainMenuController : MonoBehaviour
     void Start()
     {
         startGameButton.onClick.AddListener(OnStartButtonClicked);
+        quitGameButton.onClick.AddListener(OnQuitButtonClicked);
+        leaderboardButton.onClick.AddListener(OnLeaderboardButtonClicked);
     }
 
     private void OnStartButtonClicked()
     {
         if (playerNameInputField.text != null)
         {
-            PlayerPrefs.SetString("PlayerName", name);
-            PlayerPrefs.Save(); 
-            Debug.Log("Player name saved: " + name);
+            SavePlayerName();
             SceneManager.LoadScene("Level1");
         }
         else
@@ -34,8 +34,15 @@ public class MainMenuController : MonoBehaviour
        Application.Quit();
     }
     
-    private void leaderboardButtonClicked()
+    private void OnLeaderboardButtonClicked()
     {
        SceneManager.LoadScene("Leaderboard");
+    }
+    
+    public void SavePlayerName()
+    {
+        string playerName = playerNameInputField.text;
+        PlayerPrefs.SetString("PlayerName", playerName);
+        Debug.Log("Player name saved: " + playerName);
     }
 }

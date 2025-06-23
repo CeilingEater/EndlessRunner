@@ -22,9 +22,11 @@ public class PlayerDeath : MonoBehaviour
             GameManager.Instance.GameOver();
             
             //adding to leaderboard after death
+            Debug.Log("Player death detected. Submitting score.");
             string playerName = PlayerPrefs.GetString("PlayerName", "Unknown");
-            //int score = _score; //im gonna brown
-            //DatabaseManager.Instance.SubmitScore(playerName, score);
+            int score = GameManager.Instance.CurrentScore;
+            DatabaseManager.Instance.SubmitScore(playerName, score);
+            
             return;
         }
         

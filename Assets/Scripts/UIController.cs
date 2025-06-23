@@ -39,6 +39,19 @@ public class UIController : MonoBehaviour
     
     void Start()
     {
+        UIController uiController = FindObjectOfType<UIController>();
+
+        if (uiController != null)
+        {
+            //testing if ui reloads when going back to menu
+            GameManager.Instance.RegisterUI(this);
+            Debug.Log("Welcome back to the menu!");
+        }
+        else
+        {
+            Debug.LogWarning("No UIController found in this scene.");
+        } 
+        
         restartButton.onClick.AddListener(OnRestartButtonClicked);
         MainMenuButton.onClick.AddListener(OnMainMenuButtonClicked);
     }
