@@ -19,6 +19,8 @@ public class DatabaseManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
+    
+    
     public void SubmitScore(string playerName, int score)
     {
         Debug.Log($"Attempting to submit: {playerName} - {score}");
